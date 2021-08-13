@@ -257,11 +257,13 @@ function charCount() {
 function validation() {
     
     let btn = document.querySelector(".submitBtn");
-    btn.addEventListener("click", () => {
-        let postalCode = form['pCode'].value;
+    btn.addEventListener("click", (e) => {
+        
+        let postalCode = form.pCode.value;
         let postalRegex = /^[A-Za-z]\d[A-Za-z][\s-]?\d[A-Za-z]\d$/;
         let email = form.emailAddress.value;
         let emailRegex = /\S+@\S+\.\S+/;
+        let valid = false;
 
         if (form.fName.value === "" || form.emailAddress.value === "" ||
             form.birthday.value === "" || form.address.value === "" ||
@@ -273,27 +275,42 @@ function validation() {
                 dangerMode: true,
             });
             return;
+        } else {
+            valid = true;
         }
-
 
         if (emailRegex.test(email)) {
             form["emailAddress"].setCustomValidity("");
+            valid = true;
         } else {
+            form.emailAddress.setCustomValidity("Please input a valid email format. e.g: example@mail.com");
             swal({
                 title: "Please input a valid email format. e.g: example@mail.com",
                 icon: "warning",
                 dangerMode: true,
             });
+            valid = false;
+            return;
         }
 
+        
         if (postalRegex.test(postalCode)) {
             form["pCode"].setCustomValidity("");
+            valid = true;
         } else {
+            console.log(123);
+            form.pCode.setCustomValidity("Please input a valid Canadian postal code");
             swal({
                 title: "Please input a valid Canadian postal code",
                 icon: "warning",
                 dangerMode: true,
             });
+            valid = false;
+            return;
+        }
+
+        if (!valid) {
+            e.preventDefault();
         }
     });
 }
